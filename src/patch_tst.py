@@ -3,12 +3,12 @@ from patch import Patching
 from patch_embedding import PatchEmbedding
 
 class PatchTST(nn.Module):
-    def __init__(self, patch_dim, stride, embed_dim, num_patches, horizon):
+    def __init__(self, patch_dim, stride, embed_dim, num_patches, horizon, num_heads=4):
         super().__init__()
         self.patching = Patching(patch_dim, stride)
         self.patch_embedding = PatchEmbedding(patch_dim=patch_dim, embed_dim=embed_dim, num_patches=num_patches)
         
-        encoder_layer = nn.TransformerEncoderLayer(d_model=embed_dim, nhead=8, batch_first=True)
+        encoder_layer = nn.TransformerEncoderLayer(d_model=embed_dim, nhead=num_heads, batch_first=True)
         self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=3)
 
         self.flatten = nn.Flatten(start_dim=1) # Flatten the output of the transformer to (B*M, num_patches*embed_dim)
